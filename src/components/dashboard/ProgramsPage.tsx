@@ -186,7 +186,7 @@ export function ProgramsPage() {
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="overview">
-                    <TabsList className="mb-4">
+                    <TabsList className="mb-4 bg-card border border-border">
                       <TabsTrigger value="overview">Overview</TabsTrigger>
                       <TabsTrigger value="plos">PLOs</TabsTrigger>
                       <TabsTrigger value="courses">Courses</TabsTrigger>
