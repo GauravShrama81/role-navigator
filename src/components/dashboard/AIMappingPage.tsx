@@ -1,21 +1,22 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { aiMappingSuggestions, type AIMappingSuggestion, programsList } from '@/data/mockData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Check, X, ArrowLeft, Bot, User, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, X, Bot, Sparkles, ArrowRight, Lightbulb } from 'lucide-react';
+import { RemediationPanel } from '@/components/dashboard/RemediationPanel';
 
 export function AIMappingPage() {
   const [suggestions, setSuggestions] = useState<AIMappingSuggestion[]>(aiMappingSuggestions);
   const [courseFilter, setCourseFilter] = useState('all');
   const [confidenceFilter, setConfidenceFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('pending');
+  const [remediationItem, setRemediationItem] = useState<AIMappingSuggestion | null>(null);
 
-  const program = programsList[0]; // Healthcare Administration, BS
-
+  const program = programsList[0];
   const courses = [...new Set(suggestions.map((s) => s.course))];
 
   const filtered = useMemo(() => {
@@ -47,7 +48,6 @@ export function AIMappingPage() {
 
   const confidenceColor = (c: number) =>
     c >= 80 ? 'text-success' : c >= 50 ? 'text-warning' : 'text-destructive';
-
   const confidenceBg = (c: number) =>
     c >= 80 ? 'bg-success/10 border-success/20' : c >= 50 ? 'bg-warning/10 border-warning/20' : 'bg-destructive/10 border-destructive/20';
 
@@ -64,16 +64,12 @@ export function AIMappingPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => handleBulkAction('rejected')}>
-            Reject All
-          </Button>
-          <Button size="sm" className="bg-success hover:bg-success/90" onClick={() => handleBulkAction('accepted')}>
-            Accept All
-          </Button>
+          <Button variant="outline" size="sm" onClick={() => handleBulkAction('rejected')}>Reject All</Button>
+          <Button size="sm" className="bg-success hover:bg-success/90" onClick={() => handleBulkAction('accepted')}>Accept All</Button>
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
           { label: 'Total CLOs', value: suggestions.length, sub: `Across ${courses.length} courses`, icon: '📋' },
@@ -103,60 +99,32 @@ export function AIMappingPage() {
           </div>
           <div className="flex items-center gap-3">
             <Progress value={progress} className="flex-1 h-2" />
-            <span className="text-sm font-semibold text-foreground min-w-[40px]">
-              Reviewed {progress}%
-            </span>
+            <span className="text-sm font-semibold text-foreground min-w-[40px]">Reviewed {progress}%</span>
           </div>
         </CardContent>
       </Card>
 
       {/* Filters */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground font-medium">Course:</span>
-          <Select value={courseFilter} onValueChange={setCourseFilter}>
-            <SelectTrigger className="h-8 w-auto min-w-[180px] text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All courses</SelectItem>
-              {courses.map((c) => (
-                <SelectItem key={c} value={c}>{c}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground font-medium">Confidence:</span>
-          <Select value={confidenceFilter} onValueChange={setConfidenceFilter}>
-            <SelectTrigger className="h-8 w-auto min-w-[140px] text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All levels</SelectItem>
-              <SelectItem value="high">High (&gt;80%)</SelectItem>
-              <SelectItem value="medium">Medium (50–80%)</SelectItem>
-              <SelectItem value="low">Low (&lt;50%)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground font-medium">Status:</span>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="h-8 w-auto min-w-[120px] text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="accepted">Accepted</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <FilterSelect label="Course" value={courseFilter} onValueChange={setCourseFilter}>
+          <SelectItem value="all">All courses</SelectItem>
+          {courses.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+        </FilterSelect>
+        <FilterSelect label="Confidence" value={confidenceFilter} onValueChange={setConfidenceFilter}>
+          <SelectItem value="all">All levels</SelectItem>
+          <SelectItem value="high">High (&gt;80%)</SelectItem>
+          <SelectItem value="medium">Medium (50–80%)</SelectItem>
+          <SelectItem value="low">Low (&lt;50%)</SelectItem>
+        </FilterSelect>
+        <FilterSelect label="Status" value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="all">All</SelectItem>
+          <SelectItem value="accepted">Accepted</SelectItem>
+          <SelectItem value="rejected">Rejected</SelectItem>
+        </FilterSelect>
       </div>
 
-      {/* Mapping suggestions table */}
+      {/* Table */}
       <Card className="shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -198,37 +166,42 @@ export function AIMappingPage() {
                     <td className="py-4 px-3 text-center">
                       <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md border text-xs font-semibold ${confidenceBg(suggestion.confidence)}`}>
                         <span className={confidenceColor(suggestion.confidence)}>
-                          Confidence {suggestion.confidence}%
+                          {suggestion.confidence}%
                         </span>
                       </div>
                     </td>
                     <td className="py-4 px-3">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center gap-1.5">
                         {suggestion.status === 'pending' ? (
                           <>
                             <Button
-                              size="sm"
-                              variant="outline"
+                              size="sm" variant="outline"
                               className="h-7 text-xs border-success/30 text-success hover:bg-success/10"
                               onClick={() => handleAction(suggestion.id, 'accepted')}
                             >
                               <Check className="h-3 w-3 mr-1" /> Accept
                             </Button>
                             <Button
-                              size="sm"
-                              variant="outline"
+                              size="sm" variant="outline"
                               className="h-7 text-xs border-destructive/30 text-destructive hover:bg-destructive/10"
                               onClick={() => handleAction(suggestion.id, 'rejected')}
                             >
                               <X className="h-3 w-3 mr-1" /> Reject
                             </Button>
                           </>
+                        ) : suggestion.status === 'rejected' ? (
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant="secondary" className="text-xs bg-destructive/10 text-destructive">✗ Rejected</Badge>
+                            <Button
+                              size="sm" variant="outline"
+                              className="h-7 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                              onClick={() => setRemediationItem(suggestion)}
+                            >
+                              <Lightbulb className="h-3 w-3 mr-1" /> Remediate
+                            </Button>
+                          </div>
                         ) : (
-                          <Badge variant="secondary" className={`text-xs ${
-                            suggestion.status === 'accepted' ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
-                          }`}>
-                            {suggestion.status === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
-                          </Badge>
+                          <Badge variant="secondary" className="text-xs bg-success/10 text-success">✓ Accepted</Badge>
                         )}
                       </div>
                     </td>
@@ -273,6 +246,32 @@ export function AIMappingPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Remediation Panel */}
+      <RemediationPanel
+        suggestion={remediationItem}
+        program={program}
+        onClose={() => setRemediationItem(null)}
+      />
+    </div>
+  );
+}
+
+function FilterSelect({ label, value, onValueChange, children }: {
+  label: string;
+  value: string;
+  onValueChange: (v: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-muted-foreground font-medium">{label}:</span>
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className="h-8 w-auto min-w-[120px] text-xs">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>{children}</SelectContent>
+      </Select>
     </div>
   );
 }
