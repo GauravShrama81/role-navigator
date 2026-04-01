@@ -511,7 +511,7 @@ export const dashboardNavItems: NavItem[] = [
   { label: 'Analytics', path: '/dashboard/analytics', roles: ['atm', 'aps', 'md', 'id'], group: 'PROGRAMS', icon: 'BarChart3' },
   { label: 'Audit & Gaps', path: '/dashboard/reports', roles: ['atm', 'aps', 'md', 'id'], group: 'INTELLIGENCE', icon: 'SearchCheck', badge: 3 },
   { label: 'Orchestrations', path: '/dashboard/workflow', roles: ['atm', 'aps'], group: 'INTELLIGENCE', icon: 'Workflow' },
-  { label: 'Standards', path: '/dashboard/standards', roles: ['atm', 'id'], group: 'REVIEW', icon: 'BookOpen' },
+  { label: 'Outcome Sets', path: '/dashboard/standards', roles: ['atm', 'id'], group: 'REVIEW', icon: 'BookOpen' },
   { label: 'Ingestion', path: '/dashboard/ingestion', roles: ['atm'], group: 'REVIEW', icon: 'Upload' },
   { label: 'Scenarios', path: '/dashboard/scenarios', roles: ['atm', 'aps'], group: 'REVIEW', icon: 'GitBranch' },
   { label: 'Outputs & Exports', path: '/dashboard/mapping', roles: ['atm', 'aps', 'md'], group: 'REVIEW', icon: 'FileOutput' },
