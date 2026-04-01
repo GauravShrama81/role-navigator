@@ -15,7 +15,6 @@ export function DashboardOverview() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome */}
       <div>
         <h1 className="text-2xl font-bold text-foreground font-display">
           Welcome back, {role.fullLabel}
@@ -51,9 +50,14 @@ export function DashboardOverview() {
         {/* Partners */}
         <Card className="shadow-card">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Building2 className="h-4 w-4 text-primary" /> Partner Institutions
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-primary" /> Partner Institutions
+              </CardTitle>
+              <Button variant="ghost" size="sm" className="text-xs text-primary" asChild>
+                <Link to="/dashboard/programs">View All →</Link>
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -75,9 +79,14 @@ export function DashboardOverview() {
         {/* Programs */}
         <Card className="shadow-card">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-primary" /> Recent Programs
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <GraduationCap className="h-4 w-4 text-primary" /> Recent Programs
+              </CardTitle>
+              <Button variant="ghost" size="sm" className="text-xs text-primary" asChild>
+                <Link to="/dashboard/programs">View All →</Link>
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -109,7 +118,7 @@ export function DashboardOverview() {
         </Card>
       </div>
 
-      {/* Quick Links — role-based */}
+      {/* Quick Links */}
       <div>
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Quick Navigation</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">

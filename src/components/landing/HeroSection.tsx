@@ -1,20 +1,18 @@
 import { motion } from 'framer-motion';
 import { BarChart3, Shield, Zap, ArrowRight, Bot, User, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-hero min-h-[90vh] flex items-center">
-      {/* Decorative grid */}
       <div className="absolute inset-0 opacity-[0.04]" style={{
         backgroundImage: 'linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)',
         backgroundSize: '60px 60px'
       }} />
-      {/* Glow */}
       <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-sky/10 blur-[120px]" />
 
       <div className="relative max-w-7xl mx-auto px-6 py-20 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left — copy */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,12 +40,12 @@ export function HeroSection() {
               >
                 Explore Features <ArrowRight className="ml-2 h-4 w-4" />
               </a>
-              <a
-                href="#requirements"
+              <Link
+                to="/dashboard"
                 className="inline-flex items-center justify-center border border-navy-foreground/20 text-navy-foreground hover:bg-navy-foreground/5 h-12 px-6 text-base rounded-md transition-colors"
               >
-                View Requirements
-              </a>
+                Launch Application
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -83,7 +81,6 @@ export function HeroSection() {
             className="hidden lg:block"
           >
             <div className="relative rounded-2xl border border-navy-foreground/10 bg-navy-foreground/[0.03] backdrop-blur-sm p-6 space-y-4">
-              {/* Title */}
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 rounded-full bg-destructive/60" />
                 <div className="w-3 h-3 rounded-full bg-warning/60" />
@@ -91,43 +88,11 @@ export function HeroSection() {
                 <span className="text-xs text-navy-foreground/40 ml-2 font-mono">cip — mapping-engine</span>
               </div>
 
-              {/* Step 1: Ingestion */}
-              <MappingStep
-                step={1}
-                label="LMS Cartridge Ingestion"
-                detail="Canvas · Blackboard · D2L · Moodle"
-                type="auto"
-                delay={0.4}
-              />
+              <MappingStep step={1} label="LMS Cartridge Ingestion" detail="Canvas · Blackboard · D2L · Moodle" type="auto" delay={0.4} />
+              <MappingStep step={2} label="AI-Powered CLO → PLO Alignment" detail="12 suggestions · 87% avg confidence" type="ai" delay={0.6} />
+              <MappingStep step={3} label="Human-in-the-Loop Validation" detail="Accept, reject, or remediate mappings" type="human" delay={0.8} />
+              <MappingStep step={4} label="Reports & Gap Analysis" detail="Heatmaps · Coverage · Workforce fit" type="auto" delay={1.0} />
 
-              {/* Step 2: AI Mapping */}
-              <MappingStep
-                step={2}
-                label="AI-Powered CLO → PLO Alignment"
-                detail="12 suggestions · 87% avg confidence"
-                type="ai"
-                delay={0.6}
-              />
-
-              {/* Step 3: Human Review */}
-              <MappingStep
-                step={3}
-                label="Human-in-the-Loop Validation"
-                detail="Accept, reject, or remediate mappings"
-                type="human"
-                delay={0.8}
-              />
-
-              {/* Step 4: Reports */}
-              <MappingStep
-                step={4}
-                label="Reports & Gap Analysis"
-                detail="Heatmaps · Coverage · Workforce fit"
-                type="auto"
-                delay={1.0}
-              />
-
-              {/* Mini heatmap visual */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
