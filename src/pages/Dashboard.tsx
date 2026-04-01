@@ -3,6 +3,10 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DashboardOverview } from '@/components/dashboard/DashboardOverview';
 import { ReportsPage } from '@/components/dashboard/ReportsPage';
 import { WorkflowPage } from '@/components/dashboard/WorkflowPage';
+import { StandardsPage } from '@/components/dashboard/StandardsPage';
+import { IngestionPage } from '@/components/dashboard/IngestionPage';
+import { MappingPage } from '@/components/dashboard/MappingPage';
+import { ScenariosPage } from '@/components/dashboard/ScenariosPage';
 import { Routes, Route } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -15,6 +19,10 @@ export default function Dashboard() {
             <Route index element={<DashboardOverview />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="workflow" element={<WorkflowPage />} />
+            <Route path="standards" element={<StandardsPage />} />
+            <Route path="ingestion" element={<IngestionPage />} />
+            <Route path="mapping" element={<MappingPage />} />
+            <Route path="scenarios" element={<ScenariosPage />} />
           </Routes>
         </main>
       </div>

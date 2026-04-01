@@ -1,19 +1,38 @@
 import { motion } from 'framer-motion';
-import { heatmapData, coverageGaps } from '@/data/mockData';
+import { useState } from 'react';
+import { heatmapData, coverageGaps, overmappingData, redundancyData } from '@/data/mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, PieChart, Pie, Cell } from 'recharts';
+import { Download, Filter, AlertTriangle, Copy, ArrowUpDown } from 'lucide-react';
 
 const heatColors = ['hsl(210 20% 96%)', 'hsl(200 75% 82%)', 'hsl(215 80% 62%)', 'hsl(215 80% 42%)'];
 
 function AlignmentHeatmap() {
   const { courses, outcomes, matrix } = heatmapData;
+  const [sortOrder, setSortOrder] = useState<'default' | 'name'>('default');
+  const sortedIndices = sortOrder === 'name'
+    ? [...Array(courses.length)].map((_, i) => i).sort((a, b) => courses[a].localeCompare(courses[b]))
+    : [...Array(courses.length)].map((_, i) => i);
+
   return (
     <Card className="shadow-card overflow-hidden">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">Alignment Heatmap — B.S. Computer Science</CardTitle>
-        <p className="text-xs text-muted-foreground">Course × Program Learning Outcome coverage matrix</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-base font-semibold">Alignment Heatmap — B.S. Computer Science</CardTitle>
+            <p className="text-xs text-muted-foreground">Course × Program Learning Outcome coverage matrix</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5 h-7 text-xs" onClick={() => setSortOrder(sortOrder === 'default' ? 'name' : 'default')}>
+              <ArrowUpDown className="h-3 w-3" /> Sort
+            </Button>
+            <Button variant="outline" size="sm" className="gap-1.5 h-7 text-xs"><Filter className="h-3 w-3" /> Filter</Button>
+            <Button variant="outline" size="sm" className="gap-1.5 h-7 text-xs"><Download className="h-3 w-3" /> Export</Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -29,9 +48,9 @@ function AlignmentHeatmap() {
               </tr>
             </thead>
             <tbody>
-              {courses.map((course, ci) => (
-                <tr key={course} className="border-t border-border">
-                  <td className="p-2 font-medium text-foreground whitespace-nowrap">{course}</td>
+              {sortedIndices.map((ci) => (
+                <tr key={courses[ci]} className="border-t border-border">
+                  <td className="p-2 font-medium text-foreground whitespace-nowrap">{courses[ci]}</td>
                   {matrix[ci].map((val, oi) => (
                     <td key={oi} className="p-1 text-center">
                       <div
@@ -108,6 +127,102 @@ function CoverageGapReport() {
             <Bar dataKey="gap" fill="hsl(0, 72%, 51%)" name="Gap" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+}
+
+function OvermappingReport() {
+  return (
+    <Card className="shadow-card">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-warning" /> Overmapping Report
+        </CardTitle>
+        <p className="text-xs text-muted-foreground">CLOs mapped to an excessive number of outcomes, suggesting lack of focus</p>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {overmappingData.map((item, i) => (
+            <motion.div
+              key={item.clo}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className="p-4 rounded-xl border border-border bg-card"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{item.clo}</p>
+                  <p className="text-xs text-muted-foreground">{item.course}</p>
+                </div>
+                <Badge variant={item.severity === 'high' ? 'destructive' : 'secondary'} className="text-xs">
+                  {item.mappedOutcomes} outcomes mapped
+                </Badge>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {item.outcomes.map((o) => (
+                  <Badge key={o} variant="outline" className="text-[10px]">{o}</Badge>
+                ))}
+              </div>
+              <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${Math.min((item.mappedOutcomes / 6) * 100, 100)}%`,
+                    backgroundColor: item.severity === 'high' ? 'hsl(var(--destructive))' : 'hsl(var(--warning))',
+                  }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function RedundancyReport() {
+  return (
+    <Card className="shadow-card">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Copy className="h-4 w-4 text-sky" /> Redundancy & Gaps Report
+        </CardTitle>
+        <p className="text-xs text-muted-foreground">Objectives appearing across multiple courses — intentional scaffolding vs. unplanned duplication</p>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {redundancyData.map((item, i) => (
+            <motion.div
+              key={item.objective}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className={`p-4 rounded-xl border ${item.intentionalScaffolding ? 'border-success/30 bg-success/[0.02]' : 'border-warning/30 bg-warning/[0.02]'}`}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-sm font-medium text-foreground">{item.objective}</p>
+                <div className="flex items-center gap-2 shrink-0 ml-3">
+                  <Badge variant={item.severity === 'high' ? 'destructive' : item.severity === 'medium' ? 'secondary' : 'default'} className="text-xs">
+                    {item.severity}
+                  </Badge>
+                  {item.intentionalScaffolding ? (
+                    <Badge variant="outline" className="text-xs text-success border-success/30">Scaffolding ✓</Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs text-warning border-warning/30">Review Needed</Badge>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">Appears in:</span>
+                {item.courses.map((c) => (
+                  <Badge key={c} variant="secondary" className="text-[10px]">{c}</Badge>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
@@ -198,15 +313,24 @@ function WorkforceAlignmentReport() {
 export function ReportsPage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground font-display">Reports & Visualizations</h1>
-        <p className="text-muted-foreground mt-1">Visual intelligence for curriculum analysis and partner conversations</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground font-display">Reports & Visualizations</h1>
+          <p className="text-muted-foreground mt-1">Visual intelligence for curriculum analysis and partner conversations</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-3.5 w-3.5" /> PDF</Button>
+          <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-3.5 w-3.5" /> PowerPoint</Button>
+          <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-3.5 w-3.5" /> CSV</Button>
+        </div>
       </div>
 
       <Tabs defaultValue="heatmap" className="space-y-6">
         <TabsList className="bg-muted">
-          <TabsTrigger value="heatmap">Alignment Heatmap</TabsTrigger>
+          <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
           <TabsTrigger value="gaps">Coverage Gaps</TabsTrigger>
+          <TabsTrigger value="overmapping">Overmapping</TabsTrigger>
+          <TabsTrigger value="redundancy">Redundancy</TabsTrigger>
           <TabsTrigger value="health">Program Health</TabsTrigger>
           <TabsTrigger value="workforce">Workforce</TabsTrigger>
         </TabsList>
@@ -220,6 +344,18 @@ export function ReportsPage() {
         <TabsContent value="gaps">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <CoverageGapReport />
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="overmapping">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <OvermappingReport />
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="redundancy">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <RedundancyReport />
           </motion.div>
         </TabsContent>
 
