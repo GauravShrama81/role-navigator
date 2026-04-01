@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export function CTASection() {
   return (
@@ -23,12 +24,12 @@ export function CTASection() {
             >
               Explore Features
             </a>
-            <a
-              href="#requirements"
+            <Link
+              to="/dashboard"
               className="inline-flex items-center justify-center border border-navy-foreground/20 text-navy-foreground hover:bg-navy-foreground/5 px-6 h-10 text-sm rounded-md transition-colors"
             >
-              View All Requirements
-            </a>
+              Launch Application
+            </Link>
           </div>
         </motion.div>
       </div>
