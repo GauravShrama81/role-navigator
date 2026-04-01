@@ -18,20 +18,221 @@ export const roles: RoleInfo[] = [
 ];
 
 export const partners = [
-  { id: 1, name: 'Meridian University', programs: 12, status: 'Active', lastReview: '2026-02-15' },
-  { id: 2, name: 'Pacific Western College', programs: 8, status: 'Active', lastReview: '2026-01-20' },
-  { id: 3, name: 'Northern Highlands University', programs: 15, status: 'Pending Review', lastReview: '2025-11-10' },
-  { id: 4, name: 'Eastshore Technical Institute', programs: 6, status: 'Active', lastReview: '2026-03-01' },
-  { id: 5, name: 'Summit State University', programs: 20, status: 'Active', lastReview: '2026-02-28' },
+  { id: 1, name: 'Fortis College', programs: 3, status: 'Active', lastReview: '2026-02-15' },
+  { id: 2, name: 'National University', programs: 4, status: 'Active', lastReview: '2026-01-20' },
+  { id: 3, name: 'Grand Canyon University', programs: 5, status: 'Pending Review', lastReview: '2025-11-10' },
+  { id: 4, name: 'Liberty University', programs: 3, status: 'Active', lastReview: '2026-03-01' },
+  { id: 5, name: 'Purdue Global', programs: 6, status: 'Active', lastReview: '2026-02-28' },
 ];
 
+// ===== Programs (matching reference site) =====
+export interface Program {
+  id: string;
+  name: string;
+  partner: string;
+  lms: 'Canvas' | 'Blackboard' | 'D2L Brightspace' | 'Moodle';
+  status: 'Active' | 'Review' | 'Draft';
+  gaps: number;
+  alignmentScore: number;
+  courses: number;
+  ploCount: number;
+  accreditation: string;
+  plos: ProgramPLO[];
+  courseList: ProgramCourse[];
+}
+
+export interface ProgramPLO {
+  id: string;
+  code: string;
+  name: string;
+  coverage: number;
+  introduced: number;
+  practiced: number;
+  assessed: number;
+  status: 'Strong' | 'Adequate' | 'Developing' | 'Gap';
+}
+
+export interface ProgramCourse {
+  code: string;
+  name: string;
+  clos: number;
+  plosMapped: number;
+  ploAlignment: Record<string, 'I' | 'P' | 'A' | ''>;
+}
+
+export const programsList: Program[] = [
+  {
+    id: 'p1',
+    name: 'Healthcare Administration, BS',
+    partner: 'Fortis College',
+    lms: 'Canvas',
+    status: 'Active',
+    gaps: 2,
+    alignmentScore: 78,
+    courses: 10,
+    ploCount: 7,
+    accreditation: 'ACHE/AUPHA competency-aligned',
+    plos: [
+      { id: 'plo1', code: 'PLO 1', name: 'Healthcare Systems', coverage: 88, introduced: 3, practiced: 4, assessed: 2, status: 'Strong' },
+      { id: 'plo2', code: 'PLO 2', name: 'Ethics & Compliance', coverage: 80, introduced: 2, practiced: 3, assessed: 3, status: 'Strong' },
+      { id: 'plo3', code: 'PLO 3', name: 'Healthcare Finance', coverage: 62, introduced: 2, practiced: 2, assessed: 2, status: 'Developing' },
+      { id: 'plo4', code: 'PLO 4', name: 'Leadership & Management', coverage: 68, introduced: 1, practiced: 3, assessed: 2, status: 'Adequate' },
+      { id: 'plo5', code: 'PLO 5', name: 'Quality & Patient Safety', coverage: 22, introduced: 0, practiced: 1, assessed: 1, status: 'Gap' },
+      { id: 'plo6', code: 'PLO 6', name: 'Health Informatics', coverage: 35, introduced: 1, practiced: 1, assessed: 1, status: 'Gap' },
+      { id: 'plo7', code: 'PLO 7', name: 'Health Policy & Law', coverage: 70, introduced: 2, practiced: 2, assessed: 2, status: 'Adequate' },
+    ],
+    courseList: [
+      { code: 'HADM 101', name: 'Intro to Healthcare Administration', clos: 4, plosMapped: 4, ploAlignment: { 'PLO 1': 'I', 'PLO 2': 'I', 'PLO 3': '', 'PLO 4': 'I', 'PLO 5': '', 'PLO 6': '', 'PLO 7': 'I' } },
+      { code: 'HADM 201', name: 'Health Policy & Law', clos: 2, plosMapped: 3, ploAlignment: { 'PLO 1': 'P', 'PLO 2': 'P', 'PLO 3': '', 'PLO 4': '', 'PLO 5': '', 'PLO 6': '', 'PLO 7': 'A' } },
+      { code: 'HADM 210', name: 'Healthcare Finance & Economics', clos: 4, plosMapped: 3, ploAlignment: { 'PLO 1': 'I', 'PLO 2': '', 'PLO 3': 'A', 'PLO 4': '', 'PLO 5': 'I', 'PLO 6': '', 'PLO 7': '' } },
+      { code: 'HADM 220', name: 'Ethics & Compliance in Healthcare', clos: 5, plosMapped: 4, ploAlignment: { 'PLO 1': 'I', 'PLO 2': 'A', 'PLO 3': '', 'PLO 4': 'I', 'PLO 5': '', 'PLO 6': '', 'PLO 7': 'P' } },
+      { code: 'HADM 301', name: 'Healthcare Leadership & Management', clos: 2, plosMapped: 5, ploAlignment: { 'PLO 1': 'P', 'PLO 2': 'P', 'PLO 3': 'P', 'PLO 4': 'A', 'PLO 5': '', 'PLO 6': '', 'PLO 7': 'I' } },
+      { code: 'HADM 310', name: 'Quality Improvement & Patient Safety', clos: 1, plosMapped: 5, ploAlignment: { 'PLO 1': 'I', 'PLO 2': '', 'PLO 3': 'P', 'PLO 4': 'P', 'PLO 5': 'A', 'PLO 6': 'P', 'PLO 7': '' } },
+      { code: 'HADM 320', name: 'Health Informatics & Data Systems', clos: 3, plosMapped: 4, ploAlignment: { 'PLO 1': 'I', 'PLO 2': '', 'PLO 3': '', 'PLO 4': 'I', 'PLO 5': 'P', 'PLO 6': 'A', 'PLO 7': '' } },
+      { code: 'HADM 401', name: 'Strategic Management Capstone', clos: 2, plosMapped: 7, ploAlignment: { 'PLO 1': 'A', 'PLO 2': 'A', 'PLO 3': 'A', 'PLO 4': 'A', 'PLO 5': 'A', 'PLO 6': 'P', 'PLO 7': 'A' } },
+      { code: 'HADM 420', name: 'Healthcare Administration Practicum', clos: 1, plosMapped: 4, ploAlignment: { 'PLO 1': 'P', 'PLO 2': 'P', 'PLO 3': '', 'PLO 4': 'P', 'PLO 5': 'A', 'PLO 6': '', 'PLO 7': '' } },
+      { code: 'NURS 305', name: 'Interprofessional Practice (cross-listed)', clos: 3, plosMapped: 5, ploAlignment: { 'PLO 1': '', 'PLO 2': 'I', 'PLO 3': '', 'PLO 4': 'P', 'PLO 5': 'P', 'PLO 6': 'I', 'PLO 7': 'I' } },
+    ],
+  },
+  {
+    id: 'p2',
+    name: 'Nursing, BSN',
+    partner: 'National University',
+    lms: 'Blackboard',
+    status: 'Active',
+    gaps: 1,
+    alignmentScore: 85,
+    courses: 12,
+    ploCount: 6,
+    accreditation: 'CCNE-aligned',
+    plos: [
+      { id: 'n-plo1', code: 'PLO 1', name: 'Patient-Centered Care', coverage: 92, introduced: 4, practiced: 5, assessed: 3, status: 'Strong' },
+      { id: 'n-plo2', code: 'PLO 2', name: 'Evidence-Based Practice', coverage: 88, introduced: 3, practiced: 4, assessed: 3, status: 'Strong' },
+      { id: 'n-plo3', code: 'PLO 3', name: 'Clinical Judgment', coverage: 82, introduced: 2, practiced: 4, assessed: 3, status: 'Strong' },
+      { id: 'n-plo4', code: 'PLO 4', name: 'Interprofessional Collaboration', coverage: 78, introduced: 3, practiced: 3, assessed: 2, status: 'Adequate' },
+      { id: 'n-plo5', code: 'PLO 5', name: 'Quality & Safety', coverage: 85, introduced: 2, practiced: 4, assessed: 3, status: 'Strong' },
+      { id: 'n-plo6', code: 'PLO 6', name: 'Informatics & Technology', coverage: 45, introduced: 1, practiced: 1, assessed: 1, status: 'Gap' },
+    ],
+    courseList: [],
+  },
+  {
+    id: 'p3',
+    name: 'Business Administration, MBA',
+    partner: 'Grand Canyon University',
+    lms: 'D2L Brightspace',
+    status: 'Review',
+    gaps: 4,
+    alignmentScore: 58,
+    courses: 14,
+    ploCount: 8,
+    accreditation: 'AACSB-aligned',
+    plos: [
+      { id: 'b-plo1', code: 'PLO 1', name: 'Strategic Thinking', coverage: 72, introduced: 2, practiced: 3, assessed: 2, status: 'Adequate' },
+      { id: 'b-plo2', code: 'PLO 2', name: 'Financial Acumen', coverage: 65, introduced: 2, practiced: 2, assessed: 1, status: 'Developing' },
+      { id: 'b-plo3', code: 'PLO 3', name: 'Marketing Analytics', coverage: 40, introduced: 1, practiced: 1, assessed: 0, status: 'Gap' },
+      { id: 'b-plo4', code: 'PLO 4', name: 'Operations Management', coverage: 55, introduced: 1, practiced: 2, assessed: 1, status: 'Developing' },
+      { id: 'b-plo5', code: 'PLO 5', name: 'Leadership & Ethics', coverage: 78, introduced: 2, practiced: 3, assessed: 2, status: 'Adequate' },
+      { id: 'b-plo6', code: 'PLO 6', name: 'Global Business', coverage: 30, introduced: 1, practiced: 0, assessed: 0, status: 'Gap' },
+      { id: 'b-plo7', code: 'PLO 7', name: 'Data-Driven Decision Making', coverage: 38, introduced: 1, practiced: 1, assessed: 0, status: 'Gap' },
+      { id: 'b-plo8', code: 'PLO 8', name: 'Communication', coverage: 82, introduced: 3, practiced: 3, assessed: 2, status: 'Strong' },
+    ],
+    courseList: [],
+  },
+  {
+    id: 'p4',
+    name: 'Information Technology, BS',
+    partner: 'Liberty University',
+    lms: 'Canvas',
+    status: 'Active',
+    gaps: 1,
+    alignmentScore: 71,
+    courses: 10,
+    ploCount: 6,
+    accreditation: 'ABET-aligned',
+    plos: [
+      { id: 'it-plo1', code: 'PLO 1', name: 'Systems Architecture', coverage: 80, introduced: 2, practiced: 3, assessed: 2, status: 'Strong' },
+      { id: 'it-plo2', code: 'PLO 2', name: 'Networking & Security', coverage: 75, introduced: 2, practiced: 2, assessed: 2, status: 'Adequate' },
+      { id: 'it-plo3', code: 'PLO 3', name: 'Database Management', coverage: 68, introduced: 2, practiced: 2, assessed: 1, status: 'Adequate' },
+      { id: 'it-plo4', code: 'PLO 4', name: 'Project Management', coverage: 72, introduced: 2, practiced: 3, assessed: 1, status: 'Adequate' },
+      { id: 'it-plo5', code: 'PLO 5', name: 'Cloud Computing', coverage: 35, introduced: 1, practiced: 1, assessed: 0, status: 'Gap' },
+      { id: 'it-plo6', code: 'PLO 6', name: 'Professional Ethics', coverage: 78, introduced: 2, practiced: 2, assessed: 2, status: 'Adequate' },
+    ],
+    courseList: [],
+  },
+  {
+    id: 'p5',
+    name: 'Psychology, BS',
+    partner: 'Purdue Global',
+    lms: 'Canvas',
+    status: 'Review',
+    gaps: 6,
+    alignmentScore: 42,
+    courses: 12,
+    ploCount: 7,
+    accreditation: 'APA guidelines-aligned',
+    plos: [
+      { id: 'ps-plo1', code: 'PLO 1', name: 'Knowledge Base', coverage: 65, introduced: 3, practiced: 2, assessed: 1, status: 'Developing' },
+      { id: 'ps-plo2', code: 'PLO 2', name: 'Scientific Inquiry', coverage: 52, introduced: 2, practiced: 1, assessed: 1, status: 'Developing' },
+      { id: 'ps-plo3', code: 'PLO 3', name: 'Ethical Responsibility', coverage: 45, introduced: 1, practiced: 1, assessed: 1, status: 'Gap' },
+      { id: 'ps-plo4', code: 'PLO 4', name: 'Communication', coverage: 38, introduced: 1, practiced: 1, assessed: 0, status: 'Gap' },
+      { id: 'ps-plo5', code: 'PLO 5', name: 'Professional Development', coverage: 28, introduced: 1, practiced: 0, assessed: 0, status: 'Gap' },
+      { id: 'ps-plo6', code: 'PLO 6', name: 'Diversity & Sociocultural', coverage: 35, introduced: 1, practiced: 1, assessed: 0, status: 'Gap' },
+      { id: 'ps-plo7', code: 'PLO 7', name: 'Applied Psychology', coverage: 30, introduced: 1, practiced: 0, assessed: 0, status: 'Gap' },
+    ],
+    courseList: [],
+  },
+];
+
+// ===== AI Mapping suggestions (matching reference) =====
+export interface AIMappingSuggestion {
+  id: string;
+  cloText: string;
+  ploCode: string;
+  ploText: string;
+  confidence: number;
+  course: string;
+  status: 'pending' | 'accepted' | 'rejected';
+}
+
+export const aiMappingSuggestions: AIMappingSuggestion[] = [
+  { id: 'ai1', cloText: 'Identify and analyze the roles of major stakeholders in the US healthcare delivery system, including hospitals, insurers, government agencies, and integrated delivery networks.', ploCode: 'PLO 1', ploText: 'Analyze the structure, financing, and governance of the US healthcare delivery system.', confidence: 91, course: 'HADM 101', status: 'pending' },
+  { id: 'ai2', cloText: 'Describe reimbursement models including Diagnosis-Related Groups (DRG), capitation, bundled payments, and the transition from fee-for-service to value-based care.', ploCode: 'PLO 3', ploText: 'Apply financial management principles including DRG and capitation reimbursement to healthcare operations.', confidence: 76, course: 'HADM 101', status: 'pending' },
+  { id: 'ai3', cloText: 'Examine ethical decision-making frameworks (principlism, utilitarianism, deontology) as applied to patient care scenarios and healthcare administrative contexts.', ploCode: 'PLO 2', ploText: 'Apply ethical frameworks, legal standards, and compliance requirements to healthcare administrative decision-making.', confidence: 88, course: 'HADM 101', status: 'pending' },
+  { id: 'ai4', cloText: 'Describe the role of accreditation bodies (TJC, NCQA, AAAHC) in maintaining quality standards and the implications of accreditation status for healthcare organizations.', ploCode: 'PLO 5', ploText: 'Evaluate quality improvement methodologies, patient safety frameworks, and CMS core measures.', confidence: 54, course: 'HADM 101', status: 'pending' },
+  { id: 'ai5', cloText: 'Analyze the impact of landmark federal legislation — including the ACA, HIPAA, and Medicare Modernization Act — on healthcare access, insurance coverage, and delivery system reform.', ploCode: 'PLO 7', ploText: 'Interpret the impact of federal and state legislation and regulatory agencies on healthcare access and delivery.', confidence: 83, course: 'HADM 201', status: 'pending' },
+  { id: 'ai6', cloText: 'Evaluate the regulatory functions of state health departments, insurance commissioners, and certificate-of-need laws in shaping healthcare markets and provider networks.', ploCode: 'PLO 7', ploText: 'Interpret the impact of federal and state legislation and regulatory agencies on healthcare access and delivery.', confidence: 79, course: 'HADM 201', status: 'pending' },
+  { id: 'ai7', cloText: 'Apply transformational and servant leadership frameworks to manage interdisciplinary healthcare teams, resolve conflict, and drive organizational change in complex clinical environments.', ploCode: 'PLO 4', ploText: 'Demonstrate leadership competencies including strategic planning, workforce management, and team effectiveness.', confidence: 92, course: 'HADM 301', status: 'pending' },
+  { id: 'ai8', cloText: 'Design quality improvement initiatives using Plan-Do-Study-Act (PDSA) cycles, Lean process improvement, and root cause analysis in a simulated hospital department.', ploCode: 'PLO 5', ploText: 'Evaluate quality improvement methodologies, patient safety frameworks, and CMS core measures.', confidence: 87, course: 'HADM 301', status: 'pending' },
+  { id: 'ai9', cloText: 'Implement data analytics workflows using EHR-derived datasets to monitor patient outcomes, operational KPIs, and CMS quality measures including HCAHPS and core measures.', ploCode: 'PLO 6', ploText: 'Utilize health information technology, EHR, and data analytics platforms to support administrative decision-making.', confidence: 85, course: 'HADM 310', status: 'pending' },
+  { id: 'ai10', cloText: 'Synthesize ACHE healthcare leadership competencies through an evidence-based capstone project developed with a community health organization or integrated delivery network.', ploCode: 'PLO 1', ploText: 'Analyze the structure, financing, and governance of the US healthcare delivery system.', confidence: 89, course: 'HADM 401', status: 'pending' },
+  { id: 'ai11', cloText: 'Develop and present evidence-based strategic recommendations to senior healthcare administrators and boards using professional executive communication standards.', ploCode: 'PLO 4', ploText: 'Demonstrate leadership competencies including strategic planning, workforce management, and team effectiveness.', confidence: 78, course: 'HADM 401', status: 'pending' },
+  { id: 'ai12', cloText: 'Apply practicum-based learning to evaluate the implementation and operational impact of state and federal healthcare policy mandates within a supervised administrative setting.', ploCode: 'PLO 7', ploText: 'Interpret the impact of federal and state legislation and regulatory agencies on healthcare access and delivery.', confidence: 82, course: 'HADM 420', status: 'pending' },
+];
+
+// ===== Workforce alignment data =====
+export interface WorkforceFit {
+  competency: string;
+  status: 'Strong' | 'Adequate' | 'Developing' | 'Weak';
+}
+
+export const workforceFitData: WorkforceFit[] = [
+  { competency: 'Strategic Planning & Organizational Management', status: 'Strong' },
+  { competency: 'Healthcare Financial Management & Budgeting', status: 'Adequate' },
+  { competency: 'Quality Improvement & Patient Safety', status: 'Weak' },
+  { competency: 'Regulatory Compliance & Risk Management', status: 'Adequate' },
+  { competency: 'Health Information Technology (EHR/HIT)', status: 'Weak' },
+  { competency: 'Workforce Management & Team Leadership', status: 'Strong' },
+  { competency: 'Patient Experience & Care Coordination', status: 'Adequate' },
+  { competency: 'Population Health & Data Analytics', status: 'Developing' },
+];
+
+// ===== Legacy data kept for existing pages =====
 export const programs = [
-  { id: 1, partnerId: 1, name: 'B.S. Computer Science', courses: 12, healthScore: 87, status: 'Reviewed' },
-  { id: 2, partnerId: 1, name: 'M.S. Data Analytics', courses: 10, healthScore: 92, status: 'Reviewed' },
-  { id: 3, partnerId: 2, name: 'B.A. Business Administration', courses: 14, healthScore: 71, status: 'Needs Review' },
-  { id: 4, partnerId: 2, name: 'M.B.A.', courses: 16, healthScore: 65, status: 'In Progress' },
-  { id: 5, partnerId: 3, name: 'B.S. Nursing (BSN)', courses: 18, healthScore: 78, status: 'Reviewed' },
-  { id: 6, partnerId: 4, name: 'A.S. Cybersecurity', courses: 8, healthScore: 94, status: 'Reviewed' },
+  { id: 1, partnerId: 1, name: 'Healthcare Administration, BS', courses: 10, healthScore: 78, status: 'Active' },
+  { id: 2, partnerId: 2, name: 'Nursing, BSN', courses: 12, healthScore: 85, status: 'Active' },
+  { id: 3, partnerId: 3, name: 'Business Administration, MBA', courses: 14, healthScore: 58, status: 'Review' },
+  { id: 4, partnerId: 4, name: 'Information Technology, BS', courses: 10, healthScore: 71, status: 'Active' },
+  { id: 5, partnerId: 5, name: 'Psychology, BS', courses: 12, healthScore: 42, status: 'Review' },
 ];
 
 export const heatmapData = {
@@ -298,16 +499,23 @@ export interface NavItem {
   label: string;
   path: string;
   roles: Role[];
+  icon?: string;
+  group: string;
+  badge?: number;
 }
 
 export const dashboardNavItems: NavItem[] = [
-  { label: 'Dashboard', path: '/dashboard', roles: ['atm', 'aps', 'md', 'id'] },
-  { label: 'Standards', path: '/dashboard/standards', roles: ['atm', 'id'] },
-  { label: 'Ingestion', path: '/dashboard/ingestion', roles: ['atm'] },
-  { label: 'Mapping', path: '/dashboard/mapping', roles: ['atm', 'id'] },
-  { label: 'Reports', path: '/dashboard/reports', roles: ['atm', 'aps', 'md', 'id'] },
-  { label: 'Scenarios', path: '/dashboard/scenarios', roles: ['atm', 'aps'] },
-  { label: 'Workflow', path: '/dashboard/workflow', roles: ['atm', 'aps'] },
+  { label: 'Dashboard', path: '/dashboard', roles: ['atm', 'aps', 'md', 'id'], group: 'OVERVIEW', icon: 'LayoutDashboard' },
+  { label: 'Programs', path: '/dashboard/programs', roles: ['atm', 'aps', 'md', 'id'], group: 'PROGRAMS', icon: 'GraduationCap', badge: 5 },
+  { label: 'AI Mapping', path: '/dashboard/ai-mapping', roles: ['atm', 'aps'], group: 'PROGRAMS', icon: 'Sparkles', badge: 12 },
+  { label: 'Analytics', path: '/dashboard/analytics', roles: ['atm', 'aps', 'md', 'id'], group: 'PROGRAMS', icon: 'BarChart3' },
+  { label: 'Audit & Gaps', path: '/dashboard/reports', roles: ['atm', 'aps', 'md', 'id'], group: 'INTELLIGENCE', icon: 'SearchCheck', badge: 3 },
+  { label: 'Orchestrations', path: '/dashboard/workflow', roles: ['atm', 'aps'], group: 'INTELLIGENCE', icon: 'Workflow' },
+  { label: 'Standards', path: '/dashboard/standards', roles: ['atm', 'id'], group: 'REVIEW', icon: 'BookOpen' },
+  { label: 'Ingestion', path: '/dashboard/ingestion', roles: ['atm'], group: 'REVIEW', icon: 'Upload' },
+  { label: 'Scenarios', path: '/dashboard/scenarios', roles: ['atm', 'aps'], group: 'REVIEW', icon: 'GitBranch' },
+  { label: 'Outputs & Exports', path: '/dashboard/mapping', roles: ['atm', 'aps', 'md'], group: 'REVIEW', icon: 'FileOutput' },
+  { label: 'Market Intel', path: '/dashboard/market', roles: ['aps', 'md'], group: 'MARKET', icon: 'TrendingUp' },
 ];
 
 // ===== Workforce competency data =====
@@ -324,10 +532,10 @@ export interface WorkforceCompetency {
 export const workforceCompetencies: WorkforceCompetency[] = [
   { id: 'wc1', soc: '15-1252', occupation: 'Software Developers', competency: 'Analyze user requirements', category: 'Software Development', mapped: true, mappedTo: 'PLO 2' },
   { id: 'wc2', soc: '15-1252', occupation: 'Software Developers', competency: 'Design software solutions', category: 'Software Development', mapped: true, mappedTo: 'PLO 2' },
-  { id: 'wc3', soc: '15-1252', occupation: 'Software Developers', competency: 'Test and debug software', category: 'Software Development', mapped: true, mappedTo: 'PLO 6' },
-  { id: 'wc4', soc: '15-1212', occupation: 'Information Security Analysts', competency: 'Monitor security systems', category: 'Cybersecurity', mapped: false },
-  { id: 'wc5', soc: '15-1212', occupation: 'Information Security Analysts', competency: 'Develop security policies', category: 'Cybersecurity', mapped: true, mappedTo: 'PLO 4' },
-  { id: 'wc6', soc: '15-2051', occupation: 'Data Scientists', competency: 'Develop statistical models', category: 'Data Science', mapped: true, mappedTo: 'PLO 1' },
-  { id: 'wc7', soc: '15-2051', occupation: 'Data Scientists', competency: 'Visualize data insights', category: 'Data Science', mapped: false },
-  { id: 'wc8', soc: '11-1021', occupation: 'General Managers', competency: 'Strategic planning', category: 'Management', mapped: false },
+  { id: 'wc3', soc: '15-1252', occupation: 'Software Developers', competency: 'Apply testing methodologies', category: 'Software Development', mapped: false },
+  { id: 'wc4', soc: '15-1212', occupation: 'Information Security Analysts', competency: 'Implement security protocols', category: 'Cybersecurity', mapped: true, mappedTo: 'PLO 6' },
+  { id: 'wc5', soc: '15-1212', occupation: 'Information Security Analysts', competency: 'Conduct risk assessments', category: 'Cybersecurity', mapped: false },
+  { id: 'wc6', soc: '15-2051', occupation: 'Data Scientists', competency: 'Apply statistical analysis', category: 'Data Science', mapped: true, mappedTo: 'PLO 1' },
+  { id: 'wc7', soc: '15-2051', occupation: 'Data Scientists', competency: 'Build predictive models', category: 'Data Science', mapped: false },
+  { id: 'wc8', soc: '11-9111', occupation: 'Healthcare Administrators', competency: 'Strategic Planning', category: 'Healthcare', mapped: true, mappedTo: 'PLO 4' },
 ];
