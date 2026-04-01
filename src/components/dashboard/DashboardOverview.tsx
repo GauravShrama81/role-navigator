@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useRole } from '@/contexts/RoleContext';
-import { statsForRole, roles, partners, programs } from '@/data/mockData';
+import { statsForRole, roles, partners, programs, dashboardNavItems } from '@/data/mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Building2, GraduationCap } from 'lucide-react';
+import { TrendingUp, Building2, GraduationCap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ export function DashboardOverview() {
   const { currentRole } = useRole();
   const stats = statsForRole[currentRole];
   const role = roles.find((r) => r.key === currentRole)!;
+  const quickLinks = dashboardNavItems.filter((n) => n.roles.includes(currentRole) && n.path !== '/dashboard');
 
   return (
     <div className="space-y-8">
@@ -108,14 +109,19 @@ export function DashboardOverview() {
         </Card>
       </div>
 
-      {/* Quick Links */}
-      <div className="flex flex-wrap gap-3">
-        <Button asChild variant="outline" size="sm">
-          <Link to="/dashboard/reports">View Reports</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link to="/dashboard/workflow">Workflow Steps</Link>
-        </Button>
+      {/* Quick Links — role-based */}
+      <div>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Quick Navigation</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {quickLinks.map((link) => (
+            <Button key={link.path} asChild variant="outline" size="sm" className="justify-between h-10">
+              <Link to={link.path}>
+                {link.label}
+                <ArrowRight className="h-3.5 w-3.5 ml-2 text-muted-foreground" />
+              </Link>
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );
