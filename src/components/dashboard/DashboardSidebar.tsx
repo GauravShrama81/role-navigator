@@ -2,10 +2,10 @@ import { useRole } from '@/contexts/RoleContext';
 import { roles, dashboardNavItems } from '@/data/mockData';
 import type { Role } from '@/data/mockData';
 import { NavLink } from '@/components/NavLink';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, GraduationCap, Sparkles, BarChart3, SearchCheck,
-  Workflow, BookOpen, Upload, GitBranch, FileOutput, TrendingUp, ChevronLeft
+  Workflow, BookOpen, Upload, GitBranch, FileOutput, TrendingUp, ChevronLeft, LogOut
 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -156,9 +156,9 @@ export function DashboardSidebar() {
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild className="cursor-pointer">
-              <a href="/" className="flex items-center gap-2 text-sm">
-                Back to Home
-              </a>
+              <Link to="/" className="flex items-center gap-2 text-sm">
+                <LogOut className="h-4 w-4" /> Back to Home
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

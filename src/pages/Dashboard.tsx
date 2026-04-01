@@ -12,10 +12,31 @@ import { MappingPage } from '@/components/dashboard/MappingPage';
 import { ScenariosPage } from '@/components/dashboard/ScenariosPage';
 import { MarketIntelPage } from '@/components/dashboard/MarketIntelPage';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { dashboardNavItems } from '@/data/mockData';
+
+const breadcrumbMap: Record<string, string> = {};
+dashboardNavItems.forEach((item) => {
+  const segment = item.path.replace('/dashboard', '').replace('/', '') || '';
+  breadcrumbMap[segment] = item.label;
+});
+
+function DashboardBreadcrumb() {
+  const location = useLocation();
+  const segment = location.pathname.replace('/dashboard', '').replace('/', '') || '';
+  const label = breadcrumbMap[segment] || 'Dashboard';
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-muted-foreground font-medium">CIP</span>
+      <span className="text-muted-foreground/30">/</span>
+      <span className="text-xs text-foreground font-medium">{label}</span>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   return (
@@ -28,9 +49,7 @@ export default function Dashboard() {
             <header className="h-14 border-b border-border bg-card/80 backdrop-blur-lg flex items-center justify-between px-4 sticky top-0 z-40">
               <div className="flex items-center gap-3">
                 <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-                <span className="text-xs text-muted-foreground font-medium">CIP</span>
-                <span className="text-muted-foreground/30">/</span>
-                <span className="text-xs text-foreground font-medium">Dashboard</span>
+                <DashboardBreadcrumb />
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -43,9 +62,6 @@ export default function Dashboard() {
                 </div>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
                   <Bell className="h-4 w-4" />
-                </Button>
-                <Button size="sm" className="h-8 text-xs bg-primary">
-                  + New Program
                 </Button>
               </div>
             </header>

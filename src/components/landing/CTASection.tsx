@@ -1,7 +1,4 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 
 export function CTASection() {
   return (
@@ -14,16 +11,25 @@ export function CTASection() {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-navy-foreground mb-4">
-            Ready to explore?
+            Built for curriculum intelligence
           </h2>
           <p className="text-lg text-navy-foreground/70 mb-8 max-w-xl mx-auto">
-            Switch between roles, explore visual reports, and see how CIP transforms curriculum data into actionable intelligence.
+            CIP transforms how Risepoint teams manage outcome alignment, gap analysis, and workforce relevance across the entire partner portfolio.
           </p>
-          <Button asChild size="lg" className="bg-sky hover:bg-sky/90 text-sky-foreground px-10 h-12 text-base font-semibold shadow-lg shadow-sky/25">
-            <Link to="/dashboard">
-              Launch Dashboard <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="#features"
+              className="inline-flex items-center justify-center bg-sky/15 text-sky-foreground hover:bg-sky/25 border border-sky/20 px-6 h-10 text-sm font-semibold rounded-md transition-colors"
+            >
+              Explore Features
+            </a>
+            <a
+              href="#requirements"
+              className="inline-flex items-center justify-center border border-navy-foreground/20 text-navy-foreground hover:bg-navy-foreground/5 px-6 h-10 text-sm rounded-md transition-colors"
+            >
+              View All Requirements
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
