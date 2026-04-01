@@ -22,7 +22,7 @@
     --secondary-foreground: 215 25% 20%;
 
     --muted: 210 20% 96%;
-    --muted-foreground: 215 15% 50%;
+    --muted-foreground: 215 20% 42%;
 
     --accent: 200 75% 45%;
     --accent-foreground: 0 0% 100%;
@@ -125,5 +125,39 @@
   }
   .shadow-elevated {
     box-shadow: var(--shadow-elevated);
+  }
+}
+
+/* Global readability improvements for interactive elements */
+@layer components {
+  /* Tabs: bolder text, clearer active state */
+  [role="tablist"] {
+    @apply bg-muted/60 border border-border;
+  }
+  [role="tab"] {
+    @apply text-foreground/70 font-semibold text-sm;
+  }
+  [role="tab"][data-state="active"] {
+    @apply text-primary font-bold bg-card shadow-sm;
+  }
+
+  /* Select triggers: darker text, visible border */
+  [data-radix-select-trigger] {
+    @apply text-foreground font-medium border-border;
+  }
+
+  /* Table headers: bold and prominent */
+  th, [role="columnheader"] {
+    @apply text-foreground font-semibold text-xs uppercase tracking-wider;
+  }
+
+  /* Badge text readability */
+  [data-slot="badge"] {
+    @apply font-semibold;
+  }
+
+  /* Card labels / stat labels: ensure readable */
+  .text-muted-foreground {
+    font-weight: 500;
   }
 }
