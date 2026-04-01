@@ -1,7 +1,7 @@
 import { useRole } from '@/contexts/RoleContext';
-import { roles } from '@/data/mockData';
+import { roles, dashboardNavItems } from '@/data/mockData';
 import { BarChart3, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +16,14 @@ import type { Role } from '@/data/mockData';
 export function DashboardHeader() {
   const { currentRole, setCurrentRole } = useRole();
   const role = roles.find((r) => r.key === currentRole)!;
+  const location = useLocation();
+
+  const visibleNav = dashboardNavItems.filter((item) => item.roles.includes(currentRole));
+
+  const isActive = (path: string) => {
+    if (path === '/dashboard') return location.pathname === '/dashboard';
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <header className="sticky top-0 z-40 h-16 border-b border-border bg-card/80 backdrop-blur-lg">
@@ -28,15 +36,19 @@ export function DashboardHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors">
-            Dashboard
-          </Link>
-          <Link to="/dashboard/reports" className="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted transition-colors">
-            Reports
-          </Link>
-          <Link to="/dashboard/workflow" className="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted transition-colors">
-            Workflow
-          </Link>
+          {visibleNav.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive(item.path)
+                  ? 'text-foreground bg-muted'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <DropdownMenu>
